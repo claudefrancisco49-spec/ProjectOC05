@@ -2,24 +2,24 @@
 - Script python afin d’automatiser la migration du dataset healthcare_dataset.csv reçu vers MongoDB.
 - Docker pour conteneuriser MongoDB ainsi que le(s) script(s) de migration des données afin que le tout soit portable et scalable.
 
-## Arborescence projet migration mongodb
+## Arborescence répertoire projet migration mongodb
 
-migration_mongodb/
-│── Dockerfile
-│── docker-compose.yml
-│── requirements.txt
-│── README.MD
-│
-├── app/
-│   │── main.py
-│   │── read_csv.py
-│
-├── test/
-│   │── test_csv.py
-│   │── test_mongodb.py
-│
-└── data/
-    │── healthcare_dataset.csv
+migration_mongodb/ \
+│── Dockerfile \
+│── docker-compose.yml \
+│── requirements.txt \
+│── README.MD \
+│ \
+├── app/ \
+│   │── main.py \
+│   │── read_csv.py \
+│ \
+├── test/ \
+│   │── test_csv.py \
+│   │── test_mongodb.py \
+│ \
+└── data/ \
+    │── healthcare_dataset.csv \
 
 ## Démarrer docker-compose
 
