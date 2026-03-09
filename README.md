@@ -18,8 +18,7 @@ migration_mongodb/ \
 │   │── test_csv.py \
 │   │── test_mongodb.py \
 │ \
-└── data/ \
-*   │── healthcare_dataset.csv \
+└── data/ healthcare_dataset.csv
 
 ## Démarrer docker-compose
 
