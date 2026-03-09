@@ -1,0 +1,31 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: always
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data/db
+  app:
+    build: .
+    container_name: migration_db
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/
+      - DB_NAME=hcare_db
+    volumes:
+      - ./data:/appmdb/data
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: claude
+      ME_CONFIG_BASICAUTH_PASSWORD: oc1234
+
+ 
