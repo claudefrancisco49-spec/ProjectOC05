@@ -2,7 +2,7 @@
 - Script python afin d’automatiser la migration du dataset healthcare_dataset.csv reçu vers MongoDB.
 - Docker pour conteneuriser MongoDB ainsi que le(s) script(s) de migration des données afin que le tout soit portable et scalable.
 
-## Arborescence répertoire projet migration mongodb
+## Arborescence projet migration mongodb
 
 migration_mongodb/ \
 │── Dockerfile \
@@ -40,15 +40,35 @@ Après quelques secondes, les conteneurs docker-compose devraient être initiali
 
 1. Se positionner dans le répertoire projet du host et modifier le Dockerfile avec la commande suivante:
 
-CMD ["/bin/sh"]
+`CMD ["/bin/sh"]`
 
-1. Se positionner dans le répertoire projet du host:
+1. Se positionner dans le répertoire projet du host et exécuter la commande `docker build`:
 
 ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker build -t pyapp:latest .
 
-2. Exécuter la commande
+2. Exécuter la commande `docker run`
 ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker run -v $(pwd)/data:/appmdb/data -it --rm --name test pyapp:latest
 
 3. Vous ête dans le conteneur, tapez:
 
 $ ls -la
+
+## Manipuler mongodb (débug script python)
+
+1. Se positionner dans le répertoire projet du host et exécuter la commande `docker compose up`
+
+ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker compose up
+
+2. Exécuter la commande `docker compose exec -it mongo bash`
+
+3. Vous ête dans le conteneur mongo, tapez:
+
+# mongosh
+
+3. Mongosh prompt, tapez:
+
+test> use admin
+admin> show databases
+ou
+admin> show users
+
