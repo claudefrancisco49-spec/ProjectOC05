@@ -39,6 +39,24 @@ def get_csv():
     # Traitement des doublon
     df_datahcare = df_datahcare.drop_duplicates()
     return df_datahcare
+def get_patient_csv():
+    df_datahcare = get_csv()
+    df_patient = df_datahcare[["Name","Age","Gender", "Blood Type"]]
+    df_patient = df_patient.reset_index()
+    df_patient = df_patient.rename(columns={"index": "id_h"})
+    df_patient = df_patient.drop_duplicates(subset=["Name","Age","Gender", "Blood Type"])
+    df_patient = df_patient.reset_index(drop=True)
+    df_patient = df_patient.reset_index()
+    df_patient = df_patient.rename(columns={"index": "id_p"})
+    return df_patient
+def get_hospital_csv():
+    df_datahcare = get_csv()
+    df_patient = get_patient_csv()
+    df_hospital = df_datahcare.drop(columns=["Name","Age","Gender", "Blood Type"])
+    df_hospital = df_hospital.reset_index()
+    df_hospital = df_hospital.rename(columns={"index": "id_h"})
+    df_hospital.loc[df_hospital["id_h"].isin(df_patient["id_h"].to_list()),"id_p"]=df_patient["id_p"]
+    return df_hospital
     # *****************************************************************
     # **  preparation des documens NoSQL avant import mongodb
     # *****************************************************************

@@ -1,31 +1,55 @@
 services:
   mongo:
-    image: mongo:6
+    #image: mongo:6
+    build:
+      context: ./mongodb
     container_name: mongo
-    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin_hp
+      MONGO_INITDB_ROOT_PASSWORD: pass1234
+      #MONGO_INITDB_DATABASE: hpcare_db
+    command: mongod --auth
+    #command: ["mongod","-f","/etc/mongod.conf"]
     volumes:
       - type: bind
         source: ./data
         target: /data/db
+    networks:
+      - client-network
+      - app-network
   app:
     build: .
     container_name: migration_db
     depends_on:
       - mongo
     environment:
-      - MONGO_URI=mongodb://mongo:27017/
-      - DB_NAME=hcare_db
+      #- MONGO_URI_HP=mongodb://admin_hp:pass1234@mongo:27017/hpcare_db?authSource=admin_hp
+      #- MONGO_URI_HP=mongodb://admin_hp:pass1234@mongo:27017/hpcare_db
+      - MONGO_URI_HP=mongodb://admin_hp:pass1234@mongo:27017/
+      #- MONGO_URI_HP=mongodb://mongo:27017/
+      - DB_NAME_HP=hpcare_db
     volumes:
       - ./data:/appmdb/data
+    networks:
+      - app-network
   mongo-express:
     image: mongo-express
     restart: always
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin_hp
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass1234
+      ME_CONFIG_MONGODB_URL: mongodb://admin_hp:pass1234@mongo:27017/
       ME_CONFIG_BASICAUTH_ENABLED: true
       ME_CONFIG_BASICAUTH_USERNAME: claude
       ME_CONFIG_BASICAUTH_PASSWORD: oc1234
+    networks:
+      - client-network
+networks:
+  client-network:
+  app-network:
 
  
