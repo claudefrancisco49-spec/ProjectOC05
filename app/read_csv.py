@@ -38,6 +38,7 @@ def get_csv():
     df_datahcare["Discharge Date"] =pd.to_datetime(df_datahcare["Discharge Date"])
     # Traitement des doublon
     df_datahcare = df_datahcare.drop_duplicates()
+    df_datahcare["Name"] = df_datahcare["Name"].str.lower()
     return df_datahcare
 def get_patient_csv():
     df_datahcare = get_csv()

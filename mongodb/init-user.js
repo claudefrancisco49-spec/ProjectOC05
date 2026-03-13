@@ -1,4 +1,4 @@
-db = db.getSiblingDB('hpcare_db');
+db = db.getSiblingDB('hcare_db');
 
 db.createUser({
   user: "user_h",
@@ -6,7 +6,7 @@ db.createUser({
   roles: [
     {
       role: "readWrite",
-      db: "hpcare_db"
+      db: "hcare_db"
     }
   ]
 });

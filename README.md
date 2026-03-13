@@ -63,7 +63,7 @@ ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker compose up
 
 3. Vous ête dans le conteneur mongo, tapez:
 
-# mongosh
+mongosh
 
 3. Mongosh prompt, tapez:
 
