@@ -21,6 +21,10 @@ migration_mongodb/ \
 │ \
 └── data/ healthcare_dataset.csv
 
+## Schéma de la base de données
+
+![schema_db](https://github.com/user-attachments/assets/124a809f-17dd-466e-8383-6607e82f5464)
+
 ## Démarrer docker-compose
 
 1. Se positionner dans le répertoire:
