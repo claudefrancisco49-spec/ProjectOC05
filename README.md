@@ -139,9 +139,9 @@ ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker compose down -v
 
 2. A faire : Ne pas oublier de nettoyer la data si vous vouler rexécuter le script python, tapez:
 
-ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo rm -rf data \
-ubuntu@ubuntu2204:~/misc/migration_mongodb$ mkdir data \
-ubuntu@ubuntu2204:~/misc/migration_mongodb$ cp healthcare_dataset.csv data/ \
-ubuntu@ubuntu2204:~/misc/migration_mongodb$ ls data/ \
+migration_mongodb$ sudo rm -rf data \
+migration_mongodb$ mkdir data \
+migration_mongodb$ cp healthcare_dataset.csv data/ \
+migration_mongodb$ ls data/ \
 healthcare_dataset.csv 
 
