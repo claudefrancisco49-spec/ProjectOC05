@@ -48,6 +48,7 @@ Après quelques secondes, les conteneurs docker-compose devraient être initiali
 ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker build -t pyapp:latest .
 
 3. Exécuter la commande `docker run`
+
 ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker run -v $(pwd)/data:/appmdb/data -it --rm --name test pyapp:latest
 
 4. Vous ête dans le conteneur, tapez:
@@ -70,10 +71,10 @@ $ mongosh
 
 4. Mongosh prompt, tapez:
 
-test> use admin
-admin> show databases
-ou
-admin> show users
+test> use admin \
+admin> show databases \
+ou \
+admin> show users \
 MongoServerError[Unauthorized]: Command usersInfo requires authentication
 
 admin>exit
@@ -85,15 +86,16 @@ admin>exit
 ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker compose exec -it mongo mongosh -u admin_hp -p pass1234 --authenticationDatabase admin
 
 2. Vous êtes dans le conteneur mongo, tapez:
-test> use hcare_db
+
+test> use hcare_db \
 switched to db hcare_db
 
 3. Vous êtes dans le conteneur mongo database hcare_db, tapez:
 
-hcare_db> show collections
+hcare_db> show collections \
 hospital
 
-hcare_db> use admin
+hcare_db> use admin\
 admin> show users
 [
   {
@@ -114,19 +116,19 @@ ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker compose exec -it mongo m
 
 2. Vous êtes dans le conteneur mongo et la seul database accessible est hcare_db, tapez:
 
-test> use admin
-switched to db admin
-admin> show databases
+test> use admin \
+switched to db admin \
+admin> show databases \
 hcare_db  8.00 MiB
 
 3. Vous êtes dans le conteneur mongo database pcare_db et souhaitez consulter le nom d'un patient sans les droits admin, tapez:
 
-admin> db.getUsers()
+admin> db.getUsers() \
 MongoServerError[Unauthorized]: not authorized on admin to execute command { usersInfo: 1, lsid: { id: UUID("2e85d7b1-9a38-41c0-8ef0-a2c0eb3187b0") }, $db: "admin" }
 
-admin> use pcare_db
-switched to db pcare_db
-pcare_db> show collections
+admin> use pcare_db \
+switched to db pcare_db \
+pcare_db> show collections \
 MongoServerError[Unauthorized]: not authorized on pcare_db to execute command { listCollections: 1, filter: {}, cursor: {}, nameOnly: true, authorizedCollections: false, lsid: { id: UUID("4aa3eac3-b4c2-4518-9c72-181f3eeb9d54") }, $db: "pcare_db" }
 
 ### Arrêtez les conteneurs
@@ -134,18 +136,12 @@ MongoServerError[Unauthorized]: not authorized on pcare_db to execute command { 
 1. Vous êtes dans le conteneur mongo et souhaitez arrêter le conteneur , tapez:
 
 ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker compose down -v
-[+] down 5/5
- ✔ Container migration_mongodb-mongo-express-1 Removed                                                                                                                              1.5s
- ✔ Container migration_db                      Removed                                                                                                                              1.4s
- ✔ Container mongo                             Removed                                                                                                                              0.4s
- ✔ Network migration_mongodb_app-network       Removed                                                                                                                              0.1s
- ✔ Network migration_mongodb_client-network    Removed                                                                                                                              0.2s
 
 2. A faire : Ne pas oublier de nettoyer la data si vous vouler rexécuter le script python, tapez:
 
-ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo rm -rf data
-ubuntu@ubuntu2204:~/misc/migration_mongodb$ mkdir data
-ubuntu@ubuntu2204:~/misc/migration_mongodb$ cp healthcare_dataset.csv data/
-ubuntu@ubuntu2204:~/misc/migration_mongodb$ ls data/
-healthcare_dataset.csv
+ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo rm -rf data \
+ubuntu@ubuntu2204:~/misc/migration_mongodb$ mkdir data \
+ubuntu@ubuntu2204:~/misc/migration_mongodb$ cp healthcare_dataset.csv data/ \
+ubuntu@ubuntu2204:~/misc/migration_mongodb$ ls data/ \
+healthcare_dataset.csv 
 
