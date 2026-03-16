@@ -49,6 +49,8 @@ def get_patient_csv():
     df_patient = df_patient.reset_index(drop=True)
     df_patient = df_patient.reset_index()
     df_patient = df_patient.rename(columns={"index": "id_p"})
+    df_patient["id_p"] = df_patient["id_p"].astype("int64")
+    df_patient["id_h"] = df_patient["id_h"].astype("int64")
     return df_patient
 def get_hospital_csv():
     df_datahcare = get_csv()
@@ -57,6 +59,9 @@ def get_hospital_csv():
     df_hospital = df_hospital.reset_index()
     df_hospital = df_hospital.rename(columns={"index": "id_h"})
     df_hospital.loc[df_hospital["id_h"].isin(df_patient["id_h"].to_list()),"id_p"]=df_patient["id_p"]
+    df_hospital["id_p"] = df_hospital["id_p"].fillna(0)
+    df_hospital["id_p"] = df_hospital["id_p"].astype("int64")
+    df_hospital["id_h"] = df_hospital["id_h"].astype("int64")
     return df_hospital
     # *****************************************************************
     # **  preparation des documens NoSQL avant import mongodb

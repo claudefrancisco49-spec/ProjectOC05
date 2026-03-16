@@ -23,5 +23,5 @@ python main.py
 echo "---------------------------------"
 echo "Running unit tests mongodb ..."
 echo "---------------------------------"
-echo "To do ..."
-#python test_mongodb.py
+# echo "To do ..."
+python test_mongodb.py

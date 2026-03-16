@@ -6,34 +6,54 @@ import pymongo
 from read_csv import get_stats
 import os
 
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongo:27017/")
-DB_NAME = os.getenv("DB_NAME", "db_hcare")
-# *****************************************************
-# *********************** READ **********************
-# client : pymongo.MongoClient('localhost')
-client = pymongo.MongoClient(MONGO_URI)
+MONGO_URI_P = os.getenv("MONGO_URI_P", "mongodb://admin_hp:pass1234@mongo:27017/")
+MONGO_URI_H = os.getenv("MONGO_URI_H", "mongodb://admin_hp:pass1234@mongo:27017/")
+DB_NAME_P = os.getenv("DB_NAME_P", "db_patientcare")
+DB_NAME_H = os.getenv("DB_NAME_H", "db_hospitalcare")
+# **************************************************************
+# *********************** READ db Patient **********************
+client_patient = pymongo.MongoClient(MONGO_URI_P)
 # READ : Lecture de la BDD Mongodb
-# db_hcare_docs = client.hcare_db.hcare
-mydb = client[DB_NAME]
-db_hcare_docs = mydb["hcare"]
-cursor = db_hcare_docs.find()
-entries = list(cursor)
-df_data_Mongo_db = pd.DataFrame(entries)
+mydb_patient = client_patient[DB_NAME_P]
+db_patientcare_docs = mydb_patient["patient"]
+cursor_patient = db_patientcare_docs.find()
+entries_patient = list(cursor_patient)
+df_patientdata_Mongo_db = pd.DataFrame(entries_patient)
+# *********************** READ db Patient **********************
+client_hospital = pymongo.MongoClient(MONGO_URI_H)
+# READ : Lecture de la BDD Mongodb
+mydb_hospital = client_hospital[DB_NAME_H]
+db_hospitalcare_docs = mydb_hospital["hospital"]
+cursor_hospital = db_hospitalcare_docs.find()
+entries_hospital = list(cursor_hospital)
+df_hospitaldata_Mongo_db = pd.DataFrame(entries_hospital)
 # *** Analyse manuel et traitement des colonnes inutilisables *****
-# get_stats(df_data_Mongo_db, "Hospitalisation")
-print(df_data_Mongo_db.head(2))
+# get_stats(df_patientdata_Mongo_db, "Hospitalisation")
+print(df_patientdata_Mongo_db.head(2))
+print(df_hospitaldata_Mongo_db.head(2))
 # A tester
 class scan_Integrite:
-    def __init__(self, df_hcare_to_test):
-        self.dataframe = df_hcare_to_test
-    def count_line_col(self):
+    def __init__(self, df_hospitalcare_to_test):
+        self.dataframe = df_hospitalcare_to_test
+    def countp_line_col(self):
         # Calcul du nombre de lignes et de colonnes
         count_lines, count_columns = self.dataframe.shape
         print(f"=> Le dataframe comprend {count_lines} lignes et {count_columns} colonnes\n")
         # Affichage du nombre d'occurrences de chaque valeur possible des colonnes catégorielles
         print("\n=> Affichage du nombre d'occurrences de chaque valeur possible des colonnes catégorielles\n")
         print(self.dataframe.info())
-        if (count_lines != 54966) or (count_columns != 16):
+        if (count_lines != 54944) or (count_columns != 7):
+            return True # fail=True
+        return False
+    def counth_line_col(self):
+        # Calcul du nombre de lignes et de colonnes
+        count_lines, count_columns = self.dataframe.shape
+        print(f"=> Le dataframe comprend {count_lines} lignes et {count_columns} colonnes\n")
+
+        # Affichage du nombre d'occurrences de chaque valeur possible des colonnes catégorielles
+        print("\n=> Affichage du nombre d'occurrences de chaque valeur possible des colonnes catégorielles\n")
+        print(self.dataframe.info())
+        if (count_lines != 54966) or (count_columns != 14):
             return True # fail=True
         return False
     def count_duplicated_line(self):
@@ -43,7 +63,16 @@ class scan_Integrite:
         if duplicated > 0 :
             return True # fail=True
         return False
-    def count_val_null(self):
+    def countp_val_null(self):
+        # Calcul le nb de valeurs manquantes par colonne
+        fail=False
+        for column in self.dataframe.columns:
+            numberNull = self.dataframe[column].isnull().sum()
+            if numberNull > 0 :
+                print(f"=> FAIL : La colonne \"{column}\" à {numberNull} valeurs manquantes\n")
+                fail=True
+        return fail
+    def counth_val_null(self):
         # Calcul le nb de valeurs manquantes par colonne
         fail=False
         for column in self.dataframe.columns:
@@ -66,38 +95,72 @@ class scan_Integrite:
             if (column == "Date of Admission") and (colType != "datetime64[us]") :
                 fail=True  
             if (column == "Discharge Date") and (colType != "datetime64[us]") :
-                fail=True              
-            if not((column == "Room Number") or (column == "Age") or (column == "Billing Amount") \
-                or (column == "Date of Admission") or (column == "Discharge Date") or (column == "_id")) \
-                and (colType != "str") :
+                fail=True 
+            if (column == "id_p") and (colType != "int64") :
                 fail=True
+            if (column == "id_h") and (colType != "int64") :
+                fail=True
+            if not((column == "Room Number") or (column == "Age") or (column == "Billing Amount") \
+              or (column == "Date of Admission") or (column == "Discharge Date") or (column == "_id") or (column == "id_h") or (column == "id_p")) \
+              and (colType != "str") :
+                if (colType != "object") :
+                    print(f"=> FAIL : column {column} and coltype \"{colType}\" \n")
+                    fail=True
         return fail
 # Test unitaire
 class Test_dataframeOUT(unittest.TestCase):
-    def test_line_col(self):
+    def test_patient_line_col(self):
         # Arrange
-        a = scan_Integrite(df_data_Mongo_db)
+        a = scan_Integrite(df_patientdata_Mongo_db)
         # Act
-        outcome = a.count_line_col()
+        outcome = a.countp_line_col()
         # Assert
         self.assertFalse(outcome)
-    def test_duplicated_line(self):
+    def test_hospital_line_col(self):
         # Arrange
-        a = scan_Integrite(df_data_Mongo_db)
+        a = scan_Integrite(df_hospitaldata_Mongo_db)
+        # Act
+        outcome = a.counth_line_col()
+        # Assert
+        self.assertFalse(outcome)
+    def test_patient_duplicated_line(self):
+        # Arrange
+        a = scan_Integrite(df_patientdata_Mongo_db)
         # Act
         outcome = a.count_duplicated_line()
         # Assert
         self.assertFalse(outcome)
-    def test_value_set_null(self):
+    def test_hospital_duplicated_line(self):
         # Arrange
-        a = scan_Integrite(df_data_Mongo_db)
+        a = scan_Integrite(df_hospitaldata_Mongo_db)
         # Act
-        outcome = a.count_val_null()
+        outcome = a.count_duplicated_line()
         # Assert
         self.assertFalse(outcome)
-    def test_type_colonne(self):
+    def test_patient_value_set_null(self):
         # Arrange
-        a = scan_Integrite(df_data_Mongo_db)
+        a = scan_Integrite(df_patientdata_Mongo_db)
+        # Act
+        outcome = a.countp_val_null()
+        # Assert
+        self.assertFalse(outcome)
+    def test_hospital_value_set_null(self):
+        # Arrange
+        a = scan_Integrite(df_hospitaldata_Mongo_db)
+        # Act
+        outcome = a.counth_val_null()
+        # Assert
+        self.assertFalse(outcome)
+    def test_patient_type_colonne(self):
+        # Arrange
+        a = scan_Integrite(df_patientdata_Mongo_db)
+        # Act
+        outcome = a.eval_type_colonne()
+        # Assert
+        self.assertFalse(outcome)
+    def test_hospital_type_colonne(self):
+        # Arrange
+        a = scan_Integrite(df_hospitaldata_Mongo_db)
         # Act
         outcome = a.eval_type_colonne()
         # Assert

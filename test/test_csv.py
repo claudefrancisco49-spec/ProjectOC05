@@ -36,7 +36,7 @@ class scan_Integrite:
         fail=False
         for column in self.dataframe.columns:
             numberNull = self.dataframe[column].isnull().sum()
-            if numberNull > 0 :
+            if (numberNull > 0):
                 print(f"=> FAIL : La colonne \"{column}\" à {numberNull} valeurs manquantes\n")
                 fail=True
         return fail
