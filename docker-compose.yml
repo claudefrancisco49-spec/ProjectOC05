@@ -1,6 +1,6 @@
 services:
   mongo:
-    #image: mongo:6
+    #image: mongo:7
     build:
       context: ./mongodb
     container_name: mongo
@@ -11,7 +11,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: pass1234
       #MONGO_INITDB_DATABASE: hcare_db
     command: mongod --auth
-    #command: ["mongod","-f","/etc/mongod.conf"]
     volumes:
       - type: bind
         source: ./data
@@ -19,6 +18,7 @@ services:
     networks:
       - client-network
       - app-network
+  # Script python
   app:
     build: .
     container_name: migration_db
@@ -33,6 +33,7 @@ services:
       - ./data:/appmdb/data
     networks:
       - app-network
+  # Interface web localhost data (0.0.0.0:8081) 
   mongo-express:
     image: mongo-express
     restart: always

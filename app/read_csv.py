@@ -31,40 +31,49 @@ def get_stats(dataframe, line_meaning):
     print("\n=> Affichage du nombre d'occurrences de chaque valeur possible des colonnes catégorielles\n")
     print(dataframe.info())
     return dataframe
+# *****************************************************************
+# **  preparation des documens NoSQL avant import mongodb
+# *****************************************************************
 def get_csv():
+    # Lecture data healthcare_dataset.CSV
     df_datahcare = pd.read_csv('./data/healthcare_dataset.csv',  low_memory=False)
     # Traitement des champs date (type : conversion str to date)
     df_datahcare["Date of Admission"] =pd.to_datetime(df_datahcare["Date of Admission"])
     df_datahcare["Discharge Date"] =pd.to_datetime(df_datahcare["Discharge Date"])
-    # Traitement des doublon
+    # Traitement des doublons
     df_datahcare = df_datahcare.drop_duplicates()
+    # Traitement des noms (minuscul)
     df_datahcare["Name"] = df_datahcare["Name"].str.lower()
     return df_datahcare
 def get_patient_csv():
     df_datahcare = get_csv()
+    # Filtre les colonnes patients
     df_patient = df_datahcare[["Name","Age","Gender", "Blood Type"]]
+    # Ajout de la colonne id_h
     df_patient = df_patient.reset_index()
     df_patient = df_patient.rename(columns={"index": "id_h"})
+    # Filtre les doublon de patients (sauf id_h)
     df_patient = df_patient.drop_duplicates(subset=["Name","Age","Gender", "Blood Type"])
+    # Ajout de la colonne id_p
     df_patient = df_patient.reset_index(drop=True)
     df_patient = df_patient.reset_index()
     df_patient = df_patient.rename(columns={"index": "id_p"})
+    # Typage des indices p patient et h hospital
     df_patient["id_p"] = df_patient["id_p"].astype("int64")
     df_patient["id_h"] = df_patient["id_h"].astype("int64")
     return df_patient
 def get_hospital_csv():
     df_datahcare = get_csv()
     df_patient = get_patient_csv()
+    # Filtre les colonnes Hospital
     df_hospital = df_datahcare.drop(columns=["Name","Age","Gender", "Blood Type"])
+    # Ajout de la colonne id_h
     df_hospital = df_hospital.reset_index()
     df_hospital = df_hospital.rename(columns={"index": "id_h"})
     df_hospital.loc[df_hospital["id_h"].isin(df_patient["id_h"].to_list()),"id_p"]=df_patient["id_p"]
+    # Traitement des indices p patient et h hospital
     df_hospital["id_p"] = df_hospital["id_p"].fillna(0)
     df_hospital["id_p"] = df_hospital["id_p"].astype("int64")
     df_hospital["id_h"] = df_hospital["id_h"].astype("int64")
     return df_hospital
-    # *****************************************************************
-    # **  preparation des documens NoSQL avant import mongodb
-    # *****************************************************************
-    # documents = df_datahcare.to_dict(orient="records")
-    # *****************************************************************
+ 

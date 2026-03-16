@@ -4,16 +4,18 @@ import unittest
 import pandas as pd
 from read_csv import get_csv, get_stats
 #import pymongo
-# *****************************************************
-# *********************** READ **********************
+# ****************************************************************************
+# ******************* READ CSV ***********************************************
+# ***********Lecture de la data du fichier healthcare_dataset.csv  ***********
 df_datahcare = get_csv()
-# *** Analyse manuel et traitement des colonnes inutilisables *****
-# df_datahcare = get_stats(df_datahcare, "Stat-Hospitalisation")
 print(df_datahcare.head(2))
-# A tester
+# ****************************************************************************
+# ******************* FONCTION TEST CSV **************************************
+# **** quelques fonctions de test de la data healthcare_dataset.csv **********
 class scan_Integrite:
     def __init__(self, df_hcare_to_test):
         self.dataframe = df_hcare_to_test
+    # Test le nombre de ligne et colonnes de la dataframe (ficher csv) 
     def count_line_col(self):
         # Calcul du nombre de lignes et de colonnes
         count_lines, count_columns = self.dataframe.shape
@@ -24,6 +26,7 @@ class scan_Integrite:
         if (count_lines != 54966) or (count_columns != 15):
             return True # fail=True
         return False
+     # Test le nombre de ligne doublon de la dataframe 
     def count_duplicated_line(self):
         # Calcul du nombre de données 
         duplicated = self.dataframe.duplicated().sum()
@@ -31,6 +34,7 @@ class scan_Integrite:
         if duplicated > 0 :
             return True # fail=True
         return False
+     # Test le nombre de valeur null > 0 de la dataframe 
     def count_val_null(self):
         # Calcul le nb de valeurs manquantes par colonne
         fail=False
@@ -40,6 +44,7 @@ class scan_Integrite:
                 print(f"=> FAIL : La colonne \"{column}\" à {numberNull} valeurs manquantes\n")
                 fail=True
         return fail
+    # Test le type des valeurs de la dataframe 
     def eval_type_colonne(self):
         # Calcul le nb de valeurs manquantes par colonne
         fail=False
@@ -60,7 +65,9 @@ class scan_Integrite:
                 and (colType != "str") :
                 fail=True
         return fail
-# Test unitaire
+# ******************************************************************************************
+# ******************* TEST DE LA DATA csv (avec unittest )**********************************
+# *** Test unitaire
 class Test_dataframeIN(unittest.TestCase):
     def test_line_col(self):
         # Arrange
@@ -90,7 +97,7 @@ class Test_dataframeIN(unittest.TestCase):
         outcome = a.eval_type_colonne()
         # Assert
         self.assertFalse(outcome)
-
-#if __name__ == "__main_":
-#unittest.main()
+# ******************************************************************************************
+# lance les autotests INPUT db (unittest -v test_csv.py)
+# ******************************************************************************************
 unittest.main(verbosity=2)
