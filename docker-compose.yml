@@ -13,7 +13,7 @@ services:
     command: mongod --auth
     volumes:
       - type: bind
-        source: ./data
+        source: ./databases
         target: /data/db
     networks:
       - app-network
