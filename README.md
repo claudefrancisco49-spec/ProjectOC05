@@ -2,9 +2,6 @@
 
 - Script python afin d’automatiser la migration du dataset healthcare_dataset.csv reçu vers MongoDB.
 - Docker pour conteneuriser MongoDB ainsi que le(s) script(s) de migration des données afin que le tout soit portable et scalable.
-- Outillage pour visualisation de la base de donnée : Mongo-express est une interface d'administration MongoDB basée sur le Web http//127.0.0.1:8081
-      USERNAME: claude
-      PASSWORD: oc1234
 
 ## Arborescence projet migration mongodb
 
