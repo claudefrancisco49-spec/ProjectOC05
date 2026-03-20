@@ -7,8 +7,8 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin_hp
-      MONGO_INITDB_ROOT_PASSWORD: pass1234
+      MONGO_INITDB_ROOT_USERNAME: ${USERNAME_MDB:?error}
+      MONGO_INITDB_ROOT_PASSWORD: ${PASSWORD_MDB:?error}
       #MONGO_INITDB_DATABASE: hcare_db
     command: mongod --auth
     volumes:
@@ -24,10 +24,10 @@ services:
     depends_on:
       - mongo
     environment:
-      - MONGO_URI_H=mongodb://admin_hp:pass1234@mongo:27017/
-      - MONGO_URI_P=mongodb://admin_hp:pass1234@mongo:27017/
-      - DB_NAME_H=hcare_db
-      - DB_NAME_P=pcare_db
+      - MONGO_URI_H=mongodb://${USERNAME_MDB:?error}:${PASSWORD_MDB:?error}@mongo:27017/
+      - MONGO_URI_P=mongodb://${USERNAME_MDB:?error}:${PASSWORD_MDB:?error}@mongo:27017/
+      - DB_NAME_H=${NAME_MDBH:?error}
+      - DB_NAME_P=${NAME_MDBP:?error}
     volumes:
       - ./data:/appmdb/data
     networks:

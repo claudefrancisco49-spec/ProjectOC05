@@ -7,8 +7,8 @@ from read_csv import get_stats
 import os
 # ********************************************************************************
 # ***************** Récupere les variables d'environement ************************
-MONGO_URI_P = os.getenv("MONGO_URI_P", "mongodb://admin_hp:pass1234@mongo:27017/")
-MONGO_URI_H = os.getenv("MONGO_URI_H", "mongodb://admin_hp:pass1234@mongo:27017/")
+MONGO_URI_P = os.getenv("MONGO_URI_P", "mongodb://admin_hospat:word1234@mongo:27017/")
+MONGO_URI_H = os.getenv("MONGO_URI_H", "mongodb://admin_hospat:word1234@mongo:27017/")
 DB_NAME_P = os.getenv("DB_NAME_P", "db_patientcare")
 DB_NAME_H = os.getenv("DB_NAME_H", "db_hospitalcare")
 # *********************************************************************************
