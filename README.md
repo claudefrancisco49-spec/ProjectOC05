@@ -2,9 +2,6 @@
 
 - Script python afin d’automatiser la migration du dataset healthcare_dataset.csv reçu vers MongoDB.
 - Docker pour conteneuriser MongoDB ainsi que le(s) script(s) de migration des données afin que le tout soit portable et scalable.
-- Outillage pour visualisation de la base de donnée : Mongo-express est une interface d'administration MongoDB basée sur le Web http//127.0.0.1:8081
-      USERNAME: claude
-      PASSWORD: oc1234
 
 ## Arborescence projet migration mongodb
 
@@ -21,6 +18,8 @@ migration_mongodb/ \
 ├── test/ \
 │   │── test_csv.py \
 │   │── test_mongodb.py \
+│ \
+├── databases/ \
 │ \
 └── data/ healthcare_dataset.csv
 
@@ -146,9 +145,7 @@ ubuntu@ubuntu2204:~/misc/migration_mongodb$ sudo docker compose down -v
 
 2. A faire : Ne pas oublier de nettoyer la data si vous vouler rexécuter le script python, tapez:
 
-migration_mongodb$ sudo rm -rf data \
-migration_mongodb$ mkdir data \
-migration_mongodb$ cp healthcare_dataset.csv data/ \
-migration_mongodb$ ls data/ \
-healthcare_dataset.csv 
+migration_mongodb$ sudo rm -rf databases \
+migration_mongodb$ mkdir databases \
+
 
