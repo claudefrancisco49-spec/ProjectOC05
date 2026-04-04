@@ -1,8 +1,8 @@
 db = db.getSiblingDB('hcare_db');
 
 db.createUser({
-  user: "user_h",
-  pwd: "apph1234",
+  user: process.env.USERNAME_MDB_U,
+  pwd: process.env.PASSWORD_MDB_U,
   roles: [
     {
       role: "readWrite",
